@@ -21,8 +21,8 @@ import java.sql.SQLException;
 @Slf4j
 @Configuration
 @ComponentScan(basePackages = { "com.tigasatutiga.*" })
-@EntityScan(basePackages = { "com.tigasatutiga.orm.*" })
-//@EnableJpaRepositories(basePackages = { "com.tigasatutiga.orm.repository.*" })
+@EntityScan(basePackages = { "com.tigasatutiga.entities.*" })
+@EnableJpaRepositories(basePackages = { "com.tigasatutiga.repository.*" })
 @EnableJpaAuditing
 public class The313JPAConfig {
 
