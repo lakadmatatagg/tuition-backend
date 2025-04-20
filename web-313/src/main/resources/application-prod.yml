@@ -38,3 +38,10 @@ db:
       leak-detection-threshold: 2000
       validation-timeout: 5000
       pool-name: TigasatutigaHikariCP
+keycloak:
+  url: https://auth.tigasatutiga.com
+  realm: tuition-ez
+  active-client: tuition-ez
+  admin:
+    client-id: admin-api-client
+    client-secret: dROLHEz8M7SeeNpIk6551CdnbqgrhO4x
