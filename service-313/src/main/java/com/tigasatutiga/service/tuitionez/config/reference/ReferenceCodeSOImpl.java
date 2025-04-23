@@ -31,4 +31,8 @@ public class ReferenceCodeSOImpl extends BaseSOImpl<ReferenceCodeEntity,Referenc
         List<ReferenceCodeModel> modelList = refCodeMapper.toModelList(entityPage.getContent());
         return new PageImpl<>(modelList, pageable, entityPage.getTotalElements());
     }
+
+    public List<ReferenceCodeModel> getListByGroup(String groupCode) {
+        return refCodeMapper.toModelList(refCodeRepository.findByGroupCode(groupCode));
+    }
 }

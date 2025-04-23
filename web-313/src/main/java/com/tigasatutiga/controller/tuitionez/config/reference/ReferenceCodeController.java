@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @Slf4j
 @RequestMapping("/config/reference-code")
@@ -25,5 +27,10 @@ public class ReferenceCodeController extends BaseController<ReferenceCodeEntity,
     @GetMapping("/page/{pageNo}/{pageSize}/{sortField}/{sortDir}")
     public Page<ReferenceCodeModel> getPage(@PathVariable int pageNo, @PathVariable int pageSize, @PathVariable String sortField, @PathVariable String sortDir) {
         return referenceCodeSO.getAll(pageNo, pageSize, sortField, sortDir);
+    }
+
+    @GetMapping("/list/{groupCode}")
+    public List<ReferenceCodeModel> getList(@PathVariable String groupCode) {
+        return referenceCodeSO.getListByGroup(groupCode);
     }
 }

@@ -1,0 +1,33 @@
+package com.tigasatutiga.service.tuitionez.student;
+
+import com.tigasatutiga.entities.tuitionez.student.StudentEntity;
+import com.tigasatutiga.mapper.tuitionez.student.StudentMapper;
+import com.tigasatutiga.models.tuitionez.student.StudentModel;
+import com.tigasatutiga.repository.tuitionez.student.StudentRepository;
+import com.tigasatutiga.service.BaseSOImpl;
+import org.apache.logging.log4j.util.Strings;
+import org.springframework.data.domain.*;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class StudentSOImpl extends BaseSOImpl<StudentEntity, StudentModel, Long> implements StudentSO {
+
+    private final StudentRepository repository;
+    private final StudentMapper mapper;
+
+    public StudentSOImpl(StudentRepository repository, StudentMapper mapper) {
+        super(repository, mapper);
+        this.repository = repository;
+        this.mapper = mapper;
+    }
+
+    public Page<StudentModel> getAll(int pageNo, int pageSize, String sortField, String sortDir) {
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDir), Strings.isBlank(sortField) ? "id" : sortField);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Page<StudentEntity> entityPage = repository.findAll(pageable);
+        List<StudentModel> modelList = mapper.toModelList(entityPage.getContent());
+        return new PageImpl<>(modelList, pageable, entityPage.getTotalElements());
+    }
+}
