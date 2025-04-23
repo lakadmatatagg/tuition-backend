@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jdk-jammy as builder
+FROM eclipse-temurin:21-jdk-jammy as builder
 
 WORKDIR /opt/app
 COPY .mvn/ .mvn
@@ -14,7 +14,7 @@ RUN ./mvnw dependency:go-offline
 RUN ./mvnw clean install -DskipTests
 
 
-FROM eclipse-temurin:17-jdk-jammy
+FROM eclipse-temurin:21-jdk-jammy
 
 WORKDIR /opt/app
 EXPOSE 8080
