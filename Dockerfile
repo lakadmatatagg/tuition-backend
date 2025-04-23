@@ -10,7 +10,6 @@ COPY service-313 ./service-313
 COPY web-313 ./web-313
 
 RUN chmod +x mvnw
-RUN ./mvnw dependency:go-offline
 RUN ./mvnw clean install -DskipTests
 
 
