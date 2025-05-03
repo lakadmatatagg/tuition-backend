@@ -1,8 +1,11 @@
 package com.tigasatutiga.service.tuitionez.student;
 
+import com.tigasatutiga.entities.tuitionez.config.reference.ReferenceCodeEntity;
 import com.tigasatutiga.entities.tuitionez.student.StudentEntity;
 import com.tigasatutiga.mapper.tuitionez.student.StudentMapper;
 import com.tigasatutiga.models.tuitionez.student.StudentModel;
+import com.tigasatutiga.repository.tuitionez.config.reference.ReferenceCodeRepository;
+import com.tigasatutiga.repository.tuitionez.student.ParentRepository;
 import com.tigasatutiga.repository.tuitionez.student.StudentRepository;
 import com.tigasatutiga.service.BaseSOImpl;
 import org.apache.logging.log4j.util.Strings;
@@ -16,11 +19,15 @@ public class StudentSOImpl extends BaseSOImpl<StudentEntity, StudentModel, Long>
 
     private final StudentRepository repository;
     private final StudentMapper mapper;
+    private final ReferenceCodeRepository referenceCodeRepository;
+    private final ParentRepository parentRepository;
 
-    public StudentSOImpl(StudentRepository repository, StudentMapper mapper) {
+    public StudentSOImpl(StudentRepository repository, StudentMapper mapper, ReferenceCodeRepository referenceCodeRepository, ParentRepository parentRepository) {
         super(repository, mapper);
         this.repository = repository;
         this.mapper = mapper;
+        this.referenceCodeRepository = referenceCodeRepository;
+        this.parentRepository = parentRepository;
     }
 
     public Page<StudentModel> getAll(int pageNo, int pageSize, String sortField, String sortDir) {

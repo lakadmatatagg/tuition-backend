@@ -45,3 +45,9 @@ keycloak:
   admin:
     client-id: admin-api-client
     client-secret: dROLHEz8M7SeeNpIk6551CdnbqgrhO4x
+google:
+  project-id: tigasatutiga-439419
+  region: asia-southeast1
+  key: classpath:tuitionez-cloud-service-account.json
+  scheduler:
+    id: tuitionez_blast_invoice

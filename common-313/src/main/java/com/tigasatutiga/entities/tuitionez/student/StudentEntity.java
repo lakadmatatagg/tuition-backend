@@ -14,7 +14,6 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Getter
 @Setter
-@Accessors
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -36,10 +35,6 @@ public class StudentEntity {
     @JoinColumn(name = "GRADE_ID", referencedColumnName = "ID")
     private ReferenceCodeEntity grade;
 
-    @ManyToOne
-    @JoinColumn(name = "AGE_ID", referencedColumnName = "ID")
-    private ReferenceCodeEntity age;
-
     @ManyToMany
     @JoinTable(
         name = "JUNC_STUDENT_SUBJECT",
@@ -48,7 +43,7 @@ public class StudentEntity {
     )
     private List<ReferenceCodeEntity> subjects;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "PARENT_ID", referencedColumnName = "ID")
     private ParentEntity parent;
 }

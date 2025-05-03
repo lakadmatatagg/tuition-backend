@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface ReferenceCodeRepository extends BaseRepository<ReferenceCodeEntity, Long> {
 
-    @Query("SELECT r FROM ReferenceCodeEntity r WHERE r.group.code = :groupCode")
+    @Query("SELECT r FROM ReferenceCodeEntity r WHERE r.group.code = :groupCode ORDER BY r.order")
     List<ReferenceCodeEntity> findByGroupCode(String groupCode);
 }
