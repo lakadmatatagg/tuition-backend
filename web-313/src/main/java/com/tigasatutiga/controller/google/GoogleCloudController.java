@@ -4,7 +4,7 @@ import com.google.cloud.scheduler.v1.CloudSchedulerClient;
 import com.google.cloud.scheduler.v1.Job;
 import com.google.cloud.scheduler.v1.JobName;
 import com.google.protobuf.FieldMask;
-import com.tigasatutiga.models.tuitionez.google.CronJobModel;
+import com.tigasatutiga.models.google.CronJobModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
