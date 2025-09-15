@@ -12,4 +12,6 @@ public interface StudentSO extends BaseSO<StudentEntity, StudentModel, Long> {
     Page<StudentModel> getAll(int pageNo, int pageSize, String sortField, String sortDir);
 
     List<StudentModel> getListByParentId(Long parentId);
+
+    List<StudentModel> getListByTelegramId(String telegramId);
 }

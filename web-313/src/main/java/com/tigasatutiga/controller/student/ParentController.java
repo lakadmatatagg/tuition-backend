@@ -38,4 +38,9 @@ public class ParentController extends BaseController<ParentEntity, ParentModel, 
     public ParentModel getByPhone(@PathVariable String phone) {
         return parentSO.getByPhone(phone);
     }
+
+    @GetMapping("/get-by-telegram/{telegramId}")
+    public ParentModel getByTelegram(@PathVariable String telegramId) {
+        return parentSO.getByTelegram(telegramId);
+    }
 }

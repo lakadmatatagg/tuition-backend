@@ -12,4 +12,7 @@ public interface StudentRepository extends BaseRepository<StudentEntity, Long> {
 
     @Query("SELECT s FROM StudentEntity s WHERE s.parent.id = ?1")
     List<StudentEntity> findByParentId(Long email);
+
+    @Query("SELECT s FROM StudentEntity s WHERE s.parent.telegramChatId = ?1")
+    List<StudentEntity> findByParentTelegramId(String telegramChatId);
 }

@@ -14,4 +14,6 @@ public interface ParentSO extends BaseSO<ParentEntity, ParentModel, Long> {
     List<ParentModel> getAll();
 
     ParentModel getByPhone(String phone);
+
+    ParentModel getByTelegram(String telegramId);
 }

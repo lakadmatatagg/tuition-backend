@@ -41,4 +41,8 @@ public class StudentSOImpl extends BaseSOImpl<StudentEntity, StudentModel, Long>
 
         return mapper.toModelList(repository.findByParentId(parentId));
     }
+
+    public List<StudentModel> getListByTelegramId(String telegramId) {
+        return mapper.toModelList(repository.findByParentTelegramId(telegramId));
+    }
 }

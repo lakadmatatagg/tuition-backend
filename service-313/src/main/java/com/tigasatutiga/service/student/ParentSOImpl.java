@@ -41,4 +41,9 @@ public class ParentSOImpl extends BaseSOImpl<ParentEntity, ParentModel, Long> im
     public ParentModel getByPhone(String phone) {
         return mapper.toModel(repository.findByPhoneNoEquals(phone));
     }
+
+    @Override
+    public ParentModel getByTelegram(String telegramId) {
+        return mapper.toModel(repository.findByTelegramChatIdEquals(telegramId));
+    }
 }

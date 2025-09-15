@@ -26,9 +26,9 @@ spring:
 db:
   datasource:
     tigasatutiga:
-      jdbc-url: jdbc:mariadb://localhost:3306/313?useUnicode=true&characterEncoding=utf8
-      username: root
-      password: root
+      jdbc-url: jdbc:mariadb://185.128.227.37:3306/tigasatu_tuitionez?useUnicode=true&characterEncoding=utf8
+      username: tigasatu_tiga
+      password: 313Database!
       driver-class-name: org.mariadb.jdbc.Driver
       maximum-pool-size: 10
       minimum-idle: 5
@@ -48,6 +48,6 @@ keycloak:
 google:
   project-id: tigasatutiga-439419
   region: asia-southeast1
-  key: classpath:tuitionez-cloud-service-account.json
+  key: classpath:tigasatutiga-439419-8f706d892fc7.json
   scheduler:
     id: tuitionez_blast_invoice

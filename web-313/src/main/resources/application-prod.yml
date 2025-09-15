@@ -48,6 +48,6 @@ keycloak:
 google:
   project-id: tigasatutiga-439419
   region: asia-southeast1
-  key: classpath:tuitionez-cloud-service-account.json
+  key: classpath:tigasatutiga-439419-8f706d892fc7.json
   scheduler:
     id: tuitionez_blast_invoice

@@ -33,4 +33,9 @@ public class StudentController extends BaseController<StudentEntity, StudentMode
     public List<StudentModel> getListByParent(@PathVariable Long parentId) {
         return studentSO.getListByParentId(parentId);
     }
+
+    @GetMapping("/list-by-parent-telegram/{telegramId}")
+    public List<StudentModel> getListByParentTelegram(@PathVariable String telegramId) {
+        return studentSO.getListByTelegramId(telegramId);
+    }
 }
