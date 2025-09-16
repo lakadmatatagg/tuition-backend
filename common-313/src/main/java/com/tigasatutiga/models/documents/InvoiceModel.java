@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,4 +22,7 @@ public class InvoiceModel {
     private Boolean isCancelled;
     private LocalDate createdAt;
     private LocalDate updatedAt;
+
+    // For saving purposes
+    private List<InvoiceItemModel> invoiceItems;
 }
