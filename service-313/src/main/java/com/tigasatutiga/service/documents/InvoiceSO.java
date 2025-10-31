@@ -3,7 +3,6 @@ package com.tigasatutiga.service.documents;
 import com.tigasatutiga.entities.documents.InvoiceEntity;
 import com.tigasatutiga.models.documents.InvoiceModel;
 import com.tigasatutiga.models.documents.InvoiceTableModel;
-import com.tigasatutiga.models.student.ParentModel;
 import com.tigasatutiga.service.BaseSO;
 import org.springframework.data.domain.Page;
 

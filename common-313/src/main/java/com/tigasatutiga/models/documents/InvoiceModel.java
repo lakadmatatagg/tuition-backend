@@ -15,6 +15,7 @@ import java.util.List;
 public class InvoiceModel {
     private Long id;
     private String invoiceNo;
+    private String invoiceType;
     private ParentModel parent;
     private LocalDate issueDate;
     private LocalDate billingMonth;

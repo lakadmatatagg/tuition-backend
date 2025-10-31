@@ -2,6 +2,7 @@ package com.tigasatutiga.service.documents;
 
 import com.tigasatutiga.entities.documents.InvoiceEntity;
 import com.tigasatutiga.entities.documents.InvoiceItemEntity;
+import com.tigasatutiga.entities.documents.RunningNoEntity;
 import com.tigasatutiga.entities.tuitionez.student.ParentEntity;
 import com.tigasatutiga.mapper.documents.InvoiceItemMapper;
 import com.tigasatutiga.mapper.documents.InvoiceMapper;
@@ -9,6 +10,7 @@ import com.tigasatutiga.mapper.student.ParentMapper;
 import com.tigasatutiga.models.documents.InvoiceItemModel;
 import com.tigasatutiga.models.documents.InvoiceModel;
 import com.tigasatutiga.models.documents.InvoiceTableModel;
+import com.tigasatutiga.models.documents.RunningNoModel;
 import com.tigasatutiga.models.student.ParentModel;
 import com.tigasatutiga.repository.documents.InvoiceItemRepository;
 import com.tigasatutiga.repository.documents.InvoiceRepository;
@@ -37,6 +39,10 @@ public class InvoiceSOImpl extends BaseSOImpl<InvoiceEntity, InvoiceModel, Long>
     @Autowired
     private InvoiceItemMapper invoiceItemMapper;
 
+    @Autowired
+    private RunningNoSO runningNoSO;
+
+
     public InvoiceSOImpl(InvoiceRepository repository, InvoiceMapper mapper) {
         super(repository, mapper);
         this.repository = repository;
@@ -64,6 +70,11 @@ public class InvoiceSOImpl extends BaseSOImpl<InvoiceEntity, InvoiceModel, Long>
         try {
             // 1️⃣ Save the invoice
             InvoiceEntity invoiceEntity = mapper.toEntity(model);
+
+            // Set invoice No
+            RunningNoModel runningNo = runningNoSO.getNextRunningNo(model.getInvoiceType());
+            invoiceEntity.setInvoiceNo(runningNo.getPrefix() + runningNo.getRunningNo() + runningNo.getSuffix());
+
             InvoiceEntity savedInvoice = repository.save(invoiceEntity);
 
             // 2️⃣ Save all invoice items
