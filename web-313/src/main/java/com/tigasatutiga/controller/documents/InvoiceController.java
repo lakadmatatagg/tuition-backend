@@ -2,6 +2,7 @@ package com.tigasatutiga.controller.documents;
 
 import com.tigasatutiga.controller.BaseController;
 import com.tigasatutiga.entities.documents.InvoiceEntity;
+import com.tigasatutiga.models.ApiResponseModel;
 import com.tigasatutiga.models.documents.InvoiceModel;
 import com.tigasatutiga.models.documents.InvoiceTableModel;
 import com.tigasatutiga.models.student.ParentModel;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -30,7 +32,7 @@ public class InvoiceController extends BaseController<InvoiceEntity, InvoiceMode
     }
 
     @PostMapping("save-full-invoice")
-    public int createInvoiceWithItems(@RequestBody InvoiceModel model) {
+    public ResponseEntity<ApiResponseModel<InvoiceModel>> createInvoiceWithItems(@RequestBody InvoiceModel model) {
         return invoiceSO.createInvoiceWithItems(model);
     }
 }

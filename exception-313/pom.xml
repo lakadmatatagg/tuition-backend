@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>com.tigasatutiga</groupId>
-    <artifactId>service-313</artifactId>
+    <artifactId>exception-313</artifactId>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -24,25 +24,33 @@
             <artifactId>common-313</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
+        <!-- Spring Boot Web (for @RestController, @ControllerAdvice, etc.) -->
         <dependency>
-            <groupId>com.tigasatutiga</groupId>
-            <artifactId>mapper-313</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
+        <!-- Spring Boot Validation (optional but highly recommended for @Valid, etc.) -->
         <dependency>
-            <groupId>com.tigasatutiga</groupId>
-            <artifactId>repository-313</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
+
+        <!-- Lombok (for @Data, @Getter, @Setter, etc.) -->
         <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
         </dependency>
+
+        <!-- Optional: Spring Boot Starter Test -->
         <dependency>
-            <groupId>com.tigasatutiga</groupId>
-            <artifactId>exception-313</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
+
+
 </project>

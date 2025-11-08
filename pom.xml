@@ -32,7 +32,8 @@
         <module>mapper-313</module>
         <module>service-313</module>
 		<module>web-313</module>
-	</modules>
+        <module>exception-313</module>
+    </modules>
 
 	<scm>
 		<connection/>

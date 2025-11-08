@@ -1,12 +1,14 @@
 package com.tigasatutiga.entities.documents;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.tigasatutiga.entities.tuitionez.student.ParentEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -38,6 +40,9 @@ public class InvoiceEntity {
 
     @Column(name = "IS_CANCELLED", nullable = false)
     private Boolean isCancelled = false;
+
+    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<InvoiceItemEntity> invoiceItems;
 
     @Column(name = "CREATED_AT", updatable = false, insertable = false,
             columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")

@@ -1,5 +1,6 @@
 package com.tigasatutiga.entities.documents;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.tigasatutiga.entities.tuitionez.config.reference.ReferenceCodeEntity;
 import com.tigasatutiga.entities.tuitionez.student.StudentEntity;
 import jakarta.persistence.*;
