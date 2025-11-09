@@ -15,42 +15,54 @@ import java.io.IOException;
 @Configuration
 public class GoogleCloudConfig {
 
-    @Value("${google.key}")
+    @Value("${google.key:}")
     private String credentialsPath;  // Path to the service account JSON file
+
+    @Value("${spring.profiles.active:dev}")
+    private String activeProfile;    // Active Spring profile (e.g., dev, prod)
 
     @Bean
     public CloudSchedulerClient cloudSchedulerClient() throws IOException {
-        InputStream credentialsStream = getClass().getClassLoader().getResourceAsStream(credentialsPath.replace("classpath:", ""));
+        GoogleCredentials credentials;
 
-        // Log the status of the input stream
-        if (credentialsStream == null) {
-            log.error("Google Cloud credentials file not found at {}", credentialsPath);
-            throw new IOException("Google Cloud credentials file not found at " + credentialsPath);
+        if ("prod".equalsIgnoreCase(activeProfile)) {
+            // ☁️ In production, use Application Default Credentials (Cloud Run / GCP)
+            log.info("Using Application Default Credentials (prod profile)");
+            credentials = GoogleCredentials.getApplicationDefault();
+        } else {
+            // 🔧 In local development, load credentials from JSON file
+            InputStream credentialsStream = getClass().getClassLoader().getResourceAsStream(credentialsPath.replace("classpath:", ""));
+
+            // Log the status of the input stream
+            if (credentialsStream == null) {
+                log.error("Google Cloud credentials file not found at {}", credentialsPath);
+                throw new IOException("Google Cloud credentials file not found at " + credentialsPath);
+            }
+
+            try {
+                // Log the stream size for diagnostic purposes
+                int availableBytes = credentialsStream.available();
+                log.info("Google Cloud credentials file loaded successfully. Size: {} bytes", availableBytes);
+
+                // Load credentials from the service account JSON file
+                credentials = GoogleCredentials.fromStream(credentialsStream);
+
+                log.info("Google Cloud credential authentication successful");
+            } catch (IOException e) {
+                log.error("Error loading Google Cloud credentials from stream", e);
+                throw e;
+            } finally {
+                // Close the input stream to prevent memory leaks
+                credentialsStream.close();
+            }
         }
 
-        try {
-            // Log the stream size for diagnostic purposes
-            int availableBytes = credentialsStream.available();
-            log.info("Google Cloud credentials file loaded successfully. Size: {} bytes", availableBytes);
+        // Configure the Cloud Scheduler client with the credentials
+        CloudSchedulerSettings schedulerSettings = CloudSchedulerSettings.newBuilder()
+                .setCredentialsProvider(() -> credentials)
+                .build();
 
-            // Load credentials from the service account JSON file
-            GoogleCredentials credentials = GoogleCredentials.fromStream(credentialsStream);
-
-            // Configure the Cloud Scheduler client with the credentials
-            CloudSchedulerSettings schedulerSettings = CloudSchedulerSettings.newBuilder()
-                    .setCredentialsProvider(() -> credentials)
-                    .build();
-
-            log.info("Google Cloud credential authentication successful");
-
-            // Return the CloudSchedulerClient configured with the credentials
-            return CloudSchedulerClient.create(schedulerSettings);
-        } catch (IOException e) {
-            log.error("Error loading Google Cloud credentials from stream", e);
-            throw e;
-        } finally {
-            // Close the input stream to prevent memory leaks
-            credentialsStream.close();
-        }
+        // Return the CloudSchedulerClient configured with the credentials
+        return CloudSchedulerClient.create(schedulerSettings);
     }
 }

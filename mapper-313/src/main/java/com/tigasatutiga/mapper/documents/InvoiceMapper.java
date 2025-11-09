@@ -14,12 +14,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {InvoiceItemMapper.class})
 public interface InvoiceMapper extends BaseMapper<InvoiceEntity, InvoiceModel> {
     InvoiceMapper INVOICE_MAPPER = Mappers.getMapper(InvoiceMapper.class);
 
     List<InvoiceEntity> toEntityList(List<InvoiceModel> modelList);
     List<InvoiceModel> toModelList(List<InvoiceEntity> entityList);
+
+    // You can override single entity mapping if needed
+    @Override
+    @Mapping(target = "invoiceItems", source = "invoiceItems") // map normally
+    InvoiceModel toModel(InvoiceEntity entity);
+
+    @Override
+    @Mapping(target = "invoiceItems", source = "invoiceItems")
+    InvoiceEntity toEntity(InvoiceModel model);
 
     @Mapping(target = "id", source = "parent.id")
     @Mapping(target = "name", source = "parent.name")

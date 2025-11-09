@@ -42,6 +42,7 @@ public class InvoiceEntity {
     private Boolean isCancelled = false;
 
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<InvoiceItemEntity> invoiceItems;
 
     @Column(name = "CREATED_AT", updatable = false, insertable = false,

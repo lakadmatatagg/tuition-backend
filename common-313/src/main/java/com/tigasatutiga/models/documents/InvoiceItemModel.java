@@ -1,5 +1,6 @@
 package com.tigasatutiga.models.documents;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tigasatutiga.models.config.reference.ReferenceCodeModel;
 import com.tigasatutiga.models.student.StudentModel;
@@ -14,6 +15,8 @@ import java.time.LocalDateTime;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InvoiceItemModel {
     private Long id;
+
+    @JsonIgnore
     private InvoiceModel invoice;
     private StudentModel student;
     private ReferenceCodeModel subject;
