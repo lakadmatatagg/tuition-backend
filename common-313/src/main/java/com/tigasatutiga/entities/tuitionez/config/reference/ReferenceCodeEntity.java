@@ -11,7 +11,6 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Getter
 @Setter
-@Accessors
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity

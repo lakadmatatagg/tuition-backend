@@ -10,7 +10,6 @@ import lombok.experimental.Accessors;
 
 @Getter
 @Setter
-@Accessors
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity

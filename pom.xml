@@ -32,7 +32,8 @@
         <module>mapper-313</module>
         <module>service-313</module>
 		<module>web-313</module>
-	</modules>
+        <module>exception-313</module>
+    </modules>
 
 	<scm>
 		<connection/>
@@ -80,11 +81,15 @@
 			<artifactId>HikariCP</artifactId>
 			<version>3.4.5</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-joda</artifactId>
 			<version>2.18.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.cloud</groupId>
+			<artifactId>google-cloud-scheduler</artifactId>
+			<version>2.61.0</version>
 		</dependency>
 	</dependencies>
 

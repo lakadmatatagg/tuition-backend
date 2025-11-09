@@ -13,7 +13,6 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Getter
 @Setter
-@Accessors
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -27,9 +26,6 @@ public class ReferenceGroupEntity {
 
     @Column(name = "GROUP_CODE")
     private String code;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
-    private List<ReferenceCodeEntity> codes;
 
     @Column(name = "GROUP_NAME")
     private String name;

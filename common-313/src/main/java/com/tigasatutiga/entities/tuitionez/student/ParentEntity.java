@@ -13,7 +13,6 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Getter
 @Setter
-@Accessors
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -31,6 +30,6 @@ public class ParentEntity {
     @Column(name = "PHONE_NO")
     private String phoneNo;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
-    private List<StudentEntity> students;
+    @Column(name = "TELEGRAM_CHAT_ID")
+    private String telegramChatId;
 }
