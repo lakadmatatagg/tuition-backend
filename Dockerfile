@@ -6,6 +6,7 @@ COPY mvnw pom.xml ./
 COPY common-313 ./common-313
 COPY mapper-313 ./mapper-313
 COPY repository-313 ./repository-313
+COPY exception-313 ./exception-313
 COPY service-313 ./service-313
 COPY web-313 ./web-313
 
