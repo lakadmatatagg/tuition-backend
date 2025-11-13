@@ -37,13 +37,13 @@ public class StudentEntity {
 
     @ManyToMany
     @JoinTable(
-        name = "JUNC_STUDENT_SUBJECT",
-        joinColumns = { @JoinColumn(name = "STUDENT_ID") },
-        inverseJoinColumns = { @JoinColumn(name = "CODE_STRUCT_ID") }
+            name = "JUNC_STUDENT_SUBJECT",
+            joinColumns = { @JoinColumn(name = "STUDENT_ID") },
+            inverseJoinColumns = { @JoinColumn(name = "CODE_STRUCT_ID") }
     )
     private List<ReferenceCodeEntity> subjects;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "PARENT_ID", referencedColumnName = "ID")
     private ParentEntity parent;
 }

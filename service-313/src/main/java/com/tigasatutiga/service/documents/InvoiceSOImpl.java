@@ -86,16 +86,21 @@ public class InvoiceSOImpl extends BaseSOImpl<InvoiceEntity, InvoiceModel, Long>
         RunningNoModel runningNo = runningNoSO.getNextRunningNo(model.getInvoiceType());
         invoiceEntity.setInvoiceNo(runningNo.getPrefix() + runningNo.getRunningNo() + runningNo.getSuffix());
 
+        // 3️⃣ Save invoice items (child entities)
+        for (InvoiceItemEntity item : invoiceEntity.getInvoiceItems()) {
+            item.setInvoice(invoiceEntity);
+        }
+
         InvoiceEntity savedInvoice = repository.save(invoiceEntity);
 
-        // 3️⃣ Save invoice items (child entities)
-        if (model.getInvoiceItems() != null && !model.getInvoiceItems().isEmpty()) {
-            for (InvoiceItemModel itemModel : model.getInvoiceItems()) {
-                InvoiceItemEntity itemEntity = invoiceItemMapper.toEntity(itemModel);
-                itemEntity.setInvoice(savedInvoice); // link child → parent
-                invoiceItemRepository.save(itemEntity);
-            }
-        }
+
+//        if (model.getInvoiceItems() != null && !model.getInvoiceItems().isEmpty()) {
+//            for (InvoiceItemModel itemModel : model.getInvoiceItems()) {
+//                InvoiceItemEntity itemEntity = invoiceItemMapper.toEntity(itemModel);
+//                itemEntity.setInvoice(savedInvoice); // link child → parent
+//                invoiceItemRepository.save(itemEntity);
+//            }
+//        }
 
         // 4️⃣ Convert back to model for response
         InvoiceModel savedModel = mapper.toModel(savedInvoice);
