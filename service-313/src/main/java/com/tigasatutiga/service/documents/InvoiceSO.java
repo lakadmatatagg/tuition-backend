@@ -9,9 +9,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public interface InvoiceSO extends BaseSO<InvoiceEntity, InvoiceModel, Long> {
     Page<InvoiceTableModel> getAllInvoices(int pageNo, int pageSize, String sortField, String sortDir, LocalDate billingMonth);
 
-    ResponseEntity<ApiResponseModel<InvoiceModel>> createInvoiceWithItems(InvoiceModel model);
+    InvoiceModel createInvoiceWithItems(InvoiceModel model);
 }
