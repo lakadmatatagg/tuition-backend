@@ -51,3 +51,7 @@ google:
   key: classpath:tigasatutiga-439419-8f706d892fc7.json
   scheduler:
     id: tuitionez_blast_invoice
+microservices:
+  filer:
+    url: http://localhost:3000
+    batch-api: /generate/batch-invoice
