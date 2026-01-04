@@ -12,16 +12,6 @@ spring:
           driver-class-name: org.mariadb.jdbc.Driver
           driver: org.mariadb.jdbc.Driver
   datasource:
-    hikari:
-      maximum-pool-size: 10
-      minimum-idle: 5
-      idle-timeout: 30000
-      max-lifetime: 1800000
-      connection-timeout: 30000
-      pool-name: TigasatutigaHikariCP
-      leak-detection-threshold: 2000
-      validation-timeout: 5000
-      connection-test-query: SELECT 1
     driver-class-name: org.mariadb.jdbc.Driver
 db:
   datasource:
@@ -30,12 +20,7 @@ db:
       username: tigasatu_tiga
       password: 313Database!
       driver-class-name: org.mariadb.jdbc.Driver
-      maximum-pool-size: 10
-      minimum-idle: 5
-      idle-timeout: 30000
-      max-lifetime: 1800000
-      connection-timeout: 30000
-      leak-detection-threshold: 2000
+      max-lifetime: 60000
       validation-timeout: 5000
       pool-name: TigasatutigaHikariCP
 keycloak:

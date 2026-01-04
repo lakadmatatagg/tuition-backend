@@ -1,5 +1,7 @@
 package com.tigasatutiga.entities.tuitionez.student;
 
+import com.tigasatutiga.entities.setting.tuition.SubjectCategoryEntity;
+import com.tigasatutiga.entities.setting.tuition.SubjectEntity;
 import com.tigasatutiga.entities.tuitionez.config.reference.ReferenceCodeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -31,17 +33,21 @@ public class StudentEntity {
     @Column(name = "NAME")
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "GRADE_ID", referencedColumnName = "ID")
-    private ReferenceCodeEntity grade;
+    @ManyToMany
+    @JoinTable(
+            name = "JUNC_STUDENT_GRADE",
+            joinColumns = { @JoinColumn(name = "STUDENT_ID") },
+            inverseJoinColumns = { @JoinColumn(name = "GRADE_ID") }
+    )
+    private List<SubjectCategoryEntity> grades;
 
     @ManyToMany
     @JoinTable(
             name = "JUNC_STUDENT_SUBJECT",
             joinColumns = { @JoinColumn(name = "STUDENT_ID") },
-            inverseJoinColumns = { @JoinColumn(name = "CODE_STRUCT_ID") }
+            inverseJoinColumns = { @JoinColumn(name = "SUBJECT_ID") }
     )
-    private List<ReferenceCodeEntity> subjects;
+    private List<SubjectEntity> subjects;
 
     @ManyToOne
     @JoinColumn(name = "PARENT_ID", referencedColumnName = "ID")

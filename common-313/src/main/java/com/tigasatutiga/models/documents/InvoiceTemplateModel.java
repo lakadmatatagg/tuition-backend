@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
@@ -80,7 +81,7 @@ public class InvoiceTemplateModel {
     private String TOTAL_LABEL;
 
     @JsonProperty("SUB_TOTAL")
-    private int SUB_TOTAL;
+    private BigDecimal SUB_TOTAL;
 
     @JsonProperty("PAYMENT_REMARKS")
     private String PAYMENT_REMARKS;
