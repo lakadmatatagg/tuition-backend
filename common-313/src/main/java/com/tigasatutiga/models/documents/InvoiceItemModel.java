@@ -2,7 +2,7 @@ package com.tigasatutiga.models.documents;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.tigasatutiga.models.config.reference.ReferenceCodeModel;
+import com.tigasatutiga.models.setting.tuition.SubjectModel;
 import com.tigasatutiga.models.student.StudentModel;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +19,7 @@ public class InvoiceItemModel {
     @JsonIgnore
     private InvoiceModel invoice;
     private StudentModel student;
-    private ReferenceCodeModel subject;
+    private SubjectModel subject;
     private String description;
     private BigDecimal amount;
     private LocalDateTime createdAt;

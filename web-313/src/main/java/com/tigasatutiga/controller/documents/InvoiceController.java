@@ -6,6 +6,7 @@ import com.tigasatutiga.models.ApiResponseModel;
 import com.tigasatutiga.models.BatchInvoiceResponseModel;
 import com.tigasatutiga.models.documents.InvoiceModel;
 import com.tigasatutiga.models.documents.InvoiceTableModel;
+import com.tigasatutiga.models.documents.InvoiceTemplateModel;
 import com.tigasatutiga.service.documents.InvoiceBatchSO;
 import com.tigasatutiga.service.documents.InvoiceSO;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +40,12 @@ public class InvoiceController extends BaseController<InvoiceEntity, InvoiceMode
     public ResponseEntity<ApiResponseModel<InvoiceModel>> createInvoiceWithItems(@RequestBody InvoiceModel model) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponseModel.success(invoiceSO.createInvoiceWithItems(model), "Invoice created successfully"));
+    }
+
+    @GetMapping("/save/{parentId}")
+    public ResponseEntity<ApiResponseModel<InvoiceTemplateModel>> save(@PathVariable Long parentId) throws Exception {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponseModel.success(invoiceSO.generateInvoiceForParent(parentId), "Invoice created successfully"));
     }
 
     @GetMapping("/batch/generate-current-month")

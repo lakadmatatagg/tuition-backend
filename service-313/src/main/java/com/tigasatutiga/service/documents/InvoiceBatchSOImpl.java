@@ -15,7 +15,7 @@ import com.tigasatutiga.service.reference.ReferenceCodeSO;
 import com.tigasatutiga.service.setting.SystemSettingSO;
 import com.tigasatutiga.service.student.ParentSO;
 import com.tigasatutiga.service.student.StudentSO;
-import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -39,6 +39,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 @Service
+@Slf4j
 public class InvoiceBatchSOImpl implements InvoiceBatchSO {
 
     @Autowired
@@ -135,48 +136,28 @@ public class InvoiceBatchSOImpl implements InvoiceBatchSO {
         return ResponseEntity.ok(new ApiResponseModel<>(true, "Batch processed", response));
     }
 
+    public ResponseEntity<ApiResponseModel<BatchInvoiceResponseModel>> batchGenerateInvoices() throws Exception {
+        // Fetch all invoice table records
+        Page<InvoiceTableModel> invoicePage = invoiceSO.getAllInvoices(0, Integer.MAX_VALUE, "id", "ASC", LocalDate.now());
+        List<InvoiceTableModel> invoiceList = invoicePage.getContent();
 
-    // SEPARATE TRANSACTION PER INVOICE
-    @Transactional
-    public InvoiceModel createInvoiceForParent(InvoiceTableModel invoiceTableModel) throws Exception {
-        AtomicInteger totalAmount = new AtomicInteger();
+        List<InvoiceTemplateModel> createdTemplates = new ArrayList<>();
 
-        List<StudentModel> studentList = studentSO.getListByParentId(invoiceTableModel.getId());
-        SystemSettingModel systemSetting = systemSettingSO.getByKey("subject_fee_kuantan");
-        if (systemSetting == null) {
-            throw new BusinessException("System setting for subject fee not found.");
+        for (InvoiceTableModel invoiceTableModel : invoiceList) {
+            try {
+                // Reuse main function
+                InvoiceTemplateModel template = invoiceSO.generateInvoiceForParent(invoiceTableModel.getId());
+                createdTemplates.add(template);
+            } catch (BusinessException e) {
+                // Skip parents who already have invoices
+                log.info("Skipping parent ID {}: {}", invoiceTableModel.getId(), e.getMessage());
+            }
         }
 
-        List<InvoiceItemModel> invoiceItems = new ArrayList<>();
-        studentList.forEach(student -> {
-            student.getSubjects().forEach(subject -> {
-                InvoiceItemModel item = new InvoiceItemModel();
-                int fee = Integer.parseInt(systemSetting.getValue());
-                totalAmount.addAndGet(fee);
-                item.setStudent(student);
-                item.setSubject(subject);
-                item.setAmount(BigDecimal.valueOf(fee));
-                item.setDescription("");
-                invoiceItems.add(item);
-            });
-        });
+        // Call external generator for batch
+        BatchInvoiceResponseModel response = this.callExternalGenerator(createdTemplates);
 
-        Optional<ParentModel> optParent = parentSO.findById(invoiceTableModel.getId());
-        if (optParent.isEmpty()) {
-            throw new BusinessException("Parent not found with ID: " + invoiceTableModel.getId());
-        }
-
-        InvoiceModel invoiceModel = new InvoiceModel();
-        invoiceModel.setInvoiceType("invoice");
-        invoiceModel.setParent(optParent.get());
-        invoiceModel.setIssueDate(LocalDate.now());
-        invoiceModel.setBillingMonth(LocalDate.now());
-        invoiceModel.setTotalAmount(BigDecimal.valueOf(totalAmount.get()));
-        invoiceModel.setIsCancelled(false);
-        invoiceModel.setInvoiceItems(invoiceItems);
-
-        // Save with its own transaction
-        return invoiceSO.createInvoiceWithItems(invoiceModel);
+        return ResponseEntity.ok(new ApiResponseModel<>(true, "Batch processed", response));
     }
 
     public InvoiceTemplateModel buildInvoiceTemplate(
@@ -229,7 +210,7 @@ public class InvoiceBatchSOImpl implements InvoiceBatchSO {
         template.setPARENT_NAME(invoice.getParent().getName());
         template.setPARENT_PHONE_NO(invoice.getParent().getPhoneNo());
         template.setInvoiceItems(invoice.getInvoiceItems());
-        template.setSUB_TOTAL(invoice.getTotalAmount().intValue());
+        template.setSUB_TOTAL(invoice.getTotalAmount());
 
         return template;
     }
@@ -248,32 +229,4 @@ public class InvoiceBatchSOImpl implements InvoiceBatchSO {
 
         return response.getBody();
     }
-
-    private byte[] createZipFromBuffers(List<byte[]> pdfBuffers, List<String> fileNames) {
-        if (pdfBuffers.size() != fileNames.size()) {
-            throw new IllegalArgumentException("pdfBuffers and fileNames must have same size");
-        }
-
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
-             ZipOutputStream zos = new ZipOutputStream(baos)) {
-
-            for (int i = 0; i < pdfBuffers.size(); i++) {
-                byte[] pdf = pdfBuffers.get(i);
-                String fileName = fileNames.get(i);
-
-                ZipEntry entry = new ZipEntry(fileName + ".pdf");
-                zos.putNextEntry(entry);
-                zos.write(pdf);
-                zos.closeEntry();
-            }
-
-            zos.finish();
-            return baos.toByteArray();
-
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to create ZIP file", e);
-        }
-    }
-
-
 }
