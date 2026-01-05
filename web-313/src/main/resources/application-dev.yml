@@ -40,3 +40,8 @@ microservices:
   filer:
     url: http://localhost:3000
     batch-api: /generate/batch-invoice
+whatsapp:
+  enabled: true
+  base-url: https://graph.facebook.com/v22.0
+  phone-number-id: 961637323694211
+  token: EAAh3B2qxzKgBQbj3MceunwtxVZCljdSPcUIZASnX44ijMrZBDt2rvyTcGAv78AeycpZCMqiF6DziQ9hWa3gGVFmebZBIHVeg92mpMtsGBZAGRMZCwO8EIvTTZAmccZBZCfx3LEjpo4G3Iyrqo9xnG4h2uH31nnN9L8px42XeMt8RB3mYuVe13sJF2BFebSKORdxPoelkKTRLFGV2qJH74NvP3HoPzJJiSY8FeZC1d3Ie4WZBV8rVEi4FdZBJ7NdhbKklWWXujOlGh9KdI4JYH18Ay9R6hQN6o
