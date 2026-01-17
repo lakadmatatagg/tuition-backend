@@ -2,6 +2,7 @@ package com.tigasatutiga.entities.documents;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.tigasatutiga.entities.setting.tuition.SubjectEntity;
 import com.tigasatutiga.entities.tuitionez.config.reference.ReferenceCodeEntity;
 import com.tigasatutiga.entities.tuitionez.student.StudentEntity;
 import jakarta.persistence.*;
@@ -36,7 +37,7 @@ public class InvoiceItemEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SUBJECT_ID", nullable = false)
-    private ReferenceCodeEntity subject;
+    private SubjectEntity subject;
 
     @Column(name = "DESCRIPTION")
     private String description;

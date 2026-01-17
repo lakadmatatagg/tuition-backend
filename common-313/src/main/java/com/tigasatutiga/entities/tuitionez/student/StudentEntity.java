@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -32,6 +34,9 @@ public class StudentEntity {
 
     @Column(name = "NAME")
     private String name;
+
+    @Column(name = "REG_DATE")
+    private LocalDate registrationDate;
 
     @ManyToMany
     @JoinTable(

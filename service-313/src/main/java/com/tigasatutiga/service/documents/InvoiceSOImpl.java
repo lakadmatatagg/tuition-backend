@@ -5,16 +5,16 @@ import com.tigasatutiga.entities.documents.InvoiceItemEntity;
 import com.tigasatutiga.entities.tuitionez.student.ParentEntity;
 import com.tigasatutiga.exception.BusinessException;
 import com.tigasatutiga.mapper.documents.InvoiceMapper;
-import com.tigasatutiga.models.ApiResponseModel;
-import com.tigasatutiga.models.BatchInvoiceResponseModel;
 import com.tigasatutiga.models.config.reference.ReferenceCodeModel;
 import com.tigasatutiga.models.documents.*;
+import com.tigasatutiga.models.setting.SystemSettingModel;
 import com.tigasatutiga.models.student.ParentModel;
 import com.tigasatutiga.models.student.StudentModel;
 import com.tigasatutiga.repository.documents.InvoiceRepository;
 import com.tigasatutiga.repository.student.ParentRepository;
 import com.tigasatutiga.service.BaseSOImpl;
 import com.tigasatutiga.service.reference.ReferenceCodeSO;
+import com.tigasatutiga.service.setting.SystemSettingSO;
 import com.tigasatutiga.service.student.ParentSO;
 import com.tigasatutiga.service.student.StudentSO;
 import jakarta.transaction.Transactional;
@@ -53,6 +53,9 @@ public class InvoiceSOImpl extends BaseSOImpl<InvoiceEntity, InvoiceModel, Long>
 
     @Autowired
     private ReferenceCodeSO referenceCodeSO;
+
+    @Autowired
+    private SystemSettingSO systemSettingSO;
 
 
     public InvoiceSOImpl(InvoiceRepository repository, InvoiceMapper mapper) {
@@ -112,17 +115,59 @@ public class InvoiceSOImpl extends BaseSOImpl<InvoiceEntity, InvoiceModel, Long>
     }
 
     @Transactional
+    @Override
     public InvoiceTemplateModel generateInvoiceForParent(Long parentId) throws Exception {
 
-        // Get students
+        BigDecimal annualFee =
+                new BigDecimal(systemSettingSO.getByKey("annual_fee").getValue());
+        String annualDesc =
+                systemSettingSO.getByKey("annual_fee_description").getValue();
+
+        InvoiceModel invoiceModel =
+                buildInvoiceModel(parentId, annualFee, annualDesc);
+
+        InvoiceModel savedInvoice =
+                createInvoiceWithItems(invoiceModel);
+
+        List<ReferenceCodeModel> companyInfo =
+                referenceCodeSO.getListByGroup("COMPANY_INFO");
+        List<ReferenceCodeModel> invoiceLabels =
+                referenceCodeSO.getListByGroup("INVOICE_LABELS");
+
+        return buildInvoiceTemplate(savedInvoice, companyInfo, invoiceLabels);
+    }
+
+
+    public InvoiceTemplateModel viewInvoice(Long parentId, LocalDate billingMonth) {
+        // Fetch labels
+        List<ReferenceCodeModel> companyInfo =
+                referenceCodeSO.getListByGroup("COMPANY_INFO");
+        List<ReferenceCodeModel> invoiceLabels =
+                referenceCodeSO.getListByGroup("INVOICE_LABELS");
+
+        Optional<InvoiceEntity> optInvoice = repository.findByParentIdAndBillingMonth(parentId, billingMonth);
+
+        if (optInvoice.isEmpty()) {
+            throw new BusinessException("Invoice not found for the specified parent and billing month.");
+        }
+
+        return buildInvoiceTemplate(mapper.toModel(optInvoice.get()), companyInfo, invoiceLabels);
+    }
+
+    public InvoiceModel buildInvoiceModel(
+            Long parentId,
+            BigDecimal annualFee,
+            String annualFeeDesc
+    ) throws Exception {
+
         List<StudentModel> studentList = studentSO.getListByParentId(parentId);
 
         List<InvoiceItemModel> invoiceItemModels = new ArrayList<>();
         BigDecimal totalAmount = BigDecimal.ZERO;
 
         for (StudentModel student : studentList) {
-            for (var subject : student.getSubjects()) {
 
+            for (var subject : student.getSubjects()) {
                 BigDecimal price = subject.getCategory().getPrice();
 
                 InvoiceItemModel item = new InvoiceItemModel();
@@ -134,32 +179,41 @@ public class InvoiceSOImpl extends BaseSOImpl<InvoiceEntity, InvoiceModel, Long>
                 invoiceItemModels.add(item);
                 totalAmount = totalAmount.add(price);
             }
-        }
 
-        ParentModel parent = parentSO.findById(parentId)
-                .orElseThrow(() ->
-                        new BusinessException("Parent not found with ID: " + parentId)
+            if (student.getRegistrationDate() != null &&
+                    student.getRegistrationDate().withDayOfMonth(1)
+                            .equals(LocalDate.now().withDayOfMonth(1))) {
+
+                InvoiceItemModel annualItem = new InvoiceItemModel();
+                annualItem.setStudent(student);
+                annualItem.setAmount(annualFee);
+                annualItem.setDescription(
+                        student.getName() + " - " + annualFeeDesc + " (" +
+                                student.getRegistrationDate().format(
+                                        DateTimeFormatter.ofPattern("dd-MM-yyyy")) + ")"
                 );
 
-        // Create invoice
+                invoiceItemModels.add(annualItem);
+                totalAmount = totalAmount.add(annualFee);
+            }
+        }
+
+        Optional<ParentModel> Optparent = parentSO.findById(parentId);
+
+        if (Optparent.isEmpty()) {
+            throw new BusinessException("Parent not found with ID: " + parentId);
+        }
+
         InvoiceModel invoiceModel = new InvoiceModel();
         invoiceModel.setInvoiceType("invoice");
-        invoiceModel.setParent(parent);
+        invoiceModel.setParent(Optparent.get());
         invoiceModel.setIssueDate(LocalDate.now());
         invoiceModel.setBillingMonth(LocalDate.now().withDayOfMonth(1));
         invoiceModel.setTotalAmount(totalAmount);
         invoiceModel.setIsCancelled(false);
         invoiceModel.setInvoiceItems(invoiceItemModels);
 
-        InvoiceModel savedInvoice = this.createInvoiceWithItems(invoiceModel);
-
-        // Fetch labels
-        List<ReferenceCodeModel> companyInfo =
-                referenceCodeSO.getListByGroup("COMPANY_INFO");
-        List<ReferenceCodeModel> invoiceLabels =
-                referenceCodeSO.getListByGroup("INVOICE_LABELS");
-
-        return buildInvoiceTemplate(savedInvoice, companyInfo, invoiceLabels);
+        return invoiceModel;
     }
 
 
@@ -201,7 +255,7 @@ public class InvoiceSOImpl extends BaseSOImpl<InvoiceEntity, InvoiceModel, Long>
         template.setDATE_LABEL(invoiceLbl.apply("DATE_LABEL"));
         template.setITEM_LABEL(invoiceLbl.apply("ITEM_LABEL"));
         template.setSUBJECT_LABEL(invoiceLbl.apply("SUBJECT_LABEL"));
-        template.setPRICE_LABEL(invoiceLbl.apply("PRICE_LABEL"));
+        template.setGRADE_LABEL(invoiceLbl.apply("GRADE_LABEL"));
         template.setAMOUNT_LABEL(invoiceLbl.apply("AMOUNT_LABEL"));
         template.setTOTAL_LABEL(invoiceLbl.apply("TOTAL_LABEL"));
         template.setEND_LABEL(invoiceLbl.apply("END_LABEL"));

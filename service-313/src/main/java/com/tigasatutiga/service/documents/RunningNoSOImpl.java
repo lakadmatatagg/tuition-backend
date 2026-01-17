@@ -25,7 +25,8 @@ public class RunningNoSOImpl extends BaseSOImpl<RunningNoEntity, RunningNoModel,
     @Override
     @Transactional
     public RunningNoModel getNextRunningNo(String docCode) {
-        RunningNoEntity entity = repository.findByDocCode(docCode)
+        // 1️⃣ Fetch or create the entity
+        RunningNoEntity entity = repository.findByDocCodeForUpdate(docCode)
                 .orElseGet(() -> {
                     RunningNoEntity newEntity = new RunningNoEntity();
                     newEntity.setDocCode(docCode);
@@ -33,10 +34,15 @@ public class RunningNoSOImpl extends BaseSOImpl<RunningNoEntity, RunningNoModel,
                     return repository.save(newEntity);
                 });
 
-        // Increment numeric part (e.g., "000001" -> "000002")
+        // 2️⃣ Increment numeric part
         int nextNumber = Integer.parseInt(entity.getRunningNo()) + 1;
         entity.setRunningNo(String.format("%06d", nextNumber));
 
+        // 3️⃣ Save updated running number back to DB (atomic)
+        repository.save(entity);
+
+        // 4️⃣ Convert to model and return
         return mapper.toModel(entity);
     }
+
 }
