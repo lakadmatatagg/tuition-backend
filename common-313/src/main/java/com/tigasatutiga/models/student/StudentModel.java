@@ -7,6 +7,7 @@ import com.tigasatutiga.models.setting.tuition.SubjectModel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -16,6 +17,7 @@ public class StudentModel {
     private Long id;
     private String mykid;
     private String name;
+    private LocalDate registrationDate;
     private List<SubjectCategoryModel> grades;
     private List<SubjectModel> subjects;
     private ParentModel parent;

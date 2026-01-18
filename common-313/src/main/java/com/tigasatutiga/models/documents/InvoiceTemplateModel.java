@@ -66,8 +66,8 @@ public class InvoiceTemplateModel {
     @JsonProperty("SUBJECT_LABEL")
     private String SUBJECT_LABEL;
 
-    @JsonProperty("PRICE_LABEL")
-    private String PRICE_LABEL;
+    @JsonProperty("GRADE_LABEL")
+    private String GRADE_LABEL;
 
     @JsonProperty("AMOUNT_LABEL")
     private String AMOUNT_LABEL;

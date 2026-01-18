@@ -2,6 +2,7 @@ package com.tigasatutiga.service.documents;
 
 import com.tigasatutiga.entities.documents.InvoiceEntity;
 import com.tigasatutiga.models.ApiResponseModel;
+import com.tigasatutiga.models.config.reference.ReferenceCodeModel;
 import com.tigasatutiga.models.documents.InvoiceModel;
 import com.tigasatutiga.models.documents.InvoiceTableModel;
 import com.tigasatutiga.models.documents.InvoiceTemplateModel;
@@ -9,6 +10,7 @@ import com.tigasatutiga.service.BaseSO;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -18,4 +20,18 @@ public interface InvoiceSO extends BaseSO<InvoiceEntity, InvoiceModel, Long> {
     InvoiceModel createInvoiceWithItems(InvoiceModel model);
 
     InvoiceTemplateModel generateInvoiceForParent(Long parentId) throws Exception;
+
+    InvoiceTemplateModel viewInvoice(Long parentId, LocalDate billingMonth);
+
+    InvoiceModel buildInvoiceModel(
+            Long parentId,
+            BigDecimal annualFee,
+            String annualFeeDesc
+    ) throws Exception;
+
+    InvoiceTemplateModel buildInvoiceTemplate(
+            InvoiceModel invoice,
+            List<ReferenceCodeModel> companyLabel,
+            List<ReferenceCodeModel> invoiceLabel
+    );
 }

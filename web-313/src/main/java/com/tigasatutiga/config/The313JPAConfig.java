@@ -5,7 +5,6 @@ import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -41,7 +40,7 @@ public class The313JPAConfig {
     }
 
     @Primary
-    @Bean(name = "313_DB")
+    @Bean(name = "dataSource")
     public DataSource masterDs() throws SQLException {
         HikariDataSource con = new HikariDataSource(hikariConfigPortal());
         log.info("***************  DATA SOURCE TYPE " + con.getClass().getName() + " ****************");
@@ -49,8 +48,8 @@ public class The313JPAConfig {
         return con;
     }
 
-    @Bean(name = "jdbcNvis")
-    public JdbcTemplate nvisJdbcTemplate(@Qualifier("313_DB") DataSource masterDs) {
+    @Bean(name = "JDBC313")
+    public JdbcTemplate JDBC313Template(@Qualifier("dataSource") DataSource masterDs) {
         return new JdbcTemplate(masterDs);
     }
 

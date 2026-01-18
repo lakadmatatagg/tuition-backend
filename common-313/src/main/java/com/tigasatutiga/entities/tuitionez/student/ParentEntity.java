@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -29,6 +31,9 @@ public class ParentEntity {
 
     @Column(name = "PHONE_NO")
     private String phoneNo;
+
+    @Column(name = "REG_DATE")
+    private LocalDate registrationDate;
 
     @Column(name = "TELEGRAM_CHAT_ID")
     private String telegramChatId;
